@@ -4,8 +4,8 @@ import java.io.*;
 public class quick_sort_step {
 
     public static class Pair {
-        int i;         // dataset integer
-        String s;      // dataset string
+        int i;
+        String s;
 
         Pair(int i, String s) {
             this.i = i;
@@ -31,11 +31,6 @@ public class quick_sort_step {
         int er = sc.nextInt();
 
         ArrayList<Pair> d = readCSVRange(fn, sr, er);
-        if (d.isEmpty()) {
-            System.out.println("No data found.");
-            sc.close();
-            return;
-        }
 
         // Add initial unsorted list to step log
         sl.add(formatList(d));
@@ -59,7 +54,7 @@ public class quick_sort_step {
     }
 
     public static ArrayList<Pair> readCSVRange(String fn, int sr, int er) {
-        ArrayList<Pair> list = new ArrayList<Pair>();
+        ArrayList<Pair> arr = new ArrayList<Pair>();
         int cr = 1;
 
         try (BufferedReader br = new BufferedReader(new FileReader(fn))) {
@@ -68,9 +63,9 @@ public class quick_sort_step {
                 if (cr >= sr && cr <= er) {
                     String[] parts = l.split(",", 2);
                     if (parts.length == 2) {
-                        int number = Integer.parseInt(parts[0].trim());
-                        String text = parts[1].trim();
-                        list.add(new Pair(number, text));
+                        int i = Integer.parseInt(parts[0].trim());
+                        String s = parts[1].trim();
+                        arr.add(new Pair(i, s));
                     }
                 }
                 cr++;
@@ -80,35 +75,35 @@ public class quick_sort_step {
             System.out.println("Error reading file: " + e.getMessage());
         }
 
-        return list;
+        return arr;
     }
 
-    public static void quickSort(ArrayList<Pair> list, int left, int right) {
+    public static void quickSort(ArrayList<Pair> arr, int left, int right) {
     if (left < right) {
-        int pi = partition(list, left, right);
-        sl.add("pi=" + pi + " " + formatList(list));
-        quickSort(list, left, pi - 1);
-        quickSort(list, pi + 1, right);
+        int pi = partition(arr, left, right);
+        sl.add("pi=" + pi + " " + formatList(arr));
+        quickSort(arr, left, pi - 1);
+        quickSort(arr, pi + 1, right);
     }
 }
 
-    public static int partition(ArrayList<Pair> list, int low, int high) {
-        Pair pivot = list.get(high);
+    public static int partition(ArrayList<Pair> arr, int low, int high) {
+        Pair pi = arr.get(high);
         int i = low - 1;
         for (int j = low; j < high; j++) {
-            if (list.get(j).i <= pivot.i) {
-                Collections.swap(list, ++i, j);
+            if (arr.get(j).i <= pi.i) {
+                Collections.swap(arr, ++i, j);
             }
         }
-        Collections.swap(list, i + 1, high);
+        Collections.swap(arr, i + 1, high);
         return i + 1;
     }
 
-    public static String formatList(ArrayList<Pair> list) {
+    public static String formatList(ArrayList<Pair> arr) {
         StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < list.size(); i++) {
-            sb.append(list.get(i));
-            if (i < list.size() - 1) sb.append(", ");
+        for (int i = 0; i < arr.size(); i++) {
+            sb.append(arr.get(i));
+            if (i < arr.size() - 1) sb.append(", ");
         }
         sb.append("]");
         return sb.toString();
