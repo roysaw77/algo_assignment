@@ -13,7 +13,7 @@ public class quick_sort {
 
         @Override
         public String toString() {
-            return i + "/" + s;
+            return i + "," + s;
         }
     }
 
