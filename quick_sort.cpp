@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-
+using namespace chrono;
 
 int sr, er;
-
-
 ofstream outfile;
 
 void print_array(const vector<pair<int, string>>& vec) {
@@ -15,7 +13,6 @@ void print_array(const vector<pair<int, string>>& vec) {
     }
     outfile << "]" << endl;
 }
-
 
 int partition(vector<pair<int, string>>& vec, int low, int high) {
     int pivot = vec[high].first;
@@ -30,14 +27,11 @@ int partition(vector<pair<int, string>>& vec, int low, int high) {
     return i + 1;
 }
 
-
-void quick_sort_step(vector<pair<int, string>>& vec, int low, int high) {
+void quick_sort(vector<pair<int, string>>& vec, int low, int high) {
     if (low < high) {
         int pi = partition(vec, low, high);
-        outfile << "pi=" << pi << " ";
-        print_array(vec);
-        quick_sort_step(vec, low, pi - 1);
-        quick_sort_step(vec, pi + 1, high);
+        quick_sort(vec, low, pi - 1);
+        quick_sort(vec, pi + 1, high);
     }
 }
 
@@ -58,7 +52,6 @@ int main() {
         cout << "Invalid input. Please enter valid start and end rows: ";
     }
 
- 
     while (getline(file, line)) {
         stringstream ss(line);
         string num_str, str_val;
@@ -71,19 +64,24 @@ int main() {
     }
     file.close();
 
-   
-    string filename = "quick_sort_step_" + to_string(sr) + "_" + to_string(er) + ".txt";
+    string filename = "quick_sort" + to_string(sr) + "_" + to_string(er) + ".txt";
     outfile.open(filename);
     if (!outfile.is_open()) {
         cerr << "Error opening output file!" << endl;
         return 1;
     }
 
-  
-    print_array(data);
+    // Start timing
+    auto start = high_resolution_clock::now();
 
-  
-    quick_sort_step(data, sr, er);
+    quick_sort(data, sr, er);
+
+    // End timing
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(end - start);
+
+    print_array(data);
+    outfile << "Runtime: " << duration.count() << " microseconds" << endl;
 
     outfile.close();
     return 0;
