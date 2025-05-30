@@ -3,38 +3,42 @@ import java.util.*;
 
 public class merge_sort_step {
     public static class Pair {
-        int number;
-        String word;
+        int i;
+        String s;
 
-        public Pair(int number, String word) {
-            this.number = number;
-            this.word = word;
+        public Pair(int i, String s) {
+            this.i = i;
+            this.s = s;
         }
 
         @Override
         public String toString() {
-            return number + "/" + word;
+            return i + "," + s;
+        }
+
+        public String toFormatted() {
+            return i + "/" + s;
         }
     }
 
     public static void main(String[] args) {
-        String filename = "dataset_sample_1000.csv";
-        int startRow = 1; // 以 1 为起始下标
-        int endRow = 7;
+        final String inputFile = "dataset_sample_1000.csv";
+        final int startRow = 1; // inclusive, 1-based
+        final int endRow = 7;   // inclusive
+        final String outputFile = String.format("merge_sort_step_%d_%d.txt", startRow, endRow);
 
-        ArrayList<Pair> data = readCSVRange(filename, startRow, endRow);
+        ArrayList<Pair> data = readCSV(inputFile, startRow, endRow);
 
         List<String> stepLogs = new ArrayList<>();
-        stepLogs.add(toStringList(data)); // 初始状态
+        stepLogs.add(toStepString(data)); // initial state
 
         mergeSort(data, 0, data.size() - 1, stepLogs);
 
-        String outFile = String.format("merge_sort_step_%d_%d.txt", startRow, endRow);
-        writeStepsToFile(stepLogs, outFile);
+        writeSteps(stepLogs, outputFile);
     }
 
-    // 读取CSV指定范围行的数据
-    public static ArrayList<Pair> readCSVRange(String filename, int start, int end) {
+    // 读取指定范围的数据行
+    public static ArrayList<Pair> readCSV(String filename, int start, int end) {
         ArrayList<Pair> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -43,21 +47,21 @@ public class merge_sort_step {
                 if (currentRow >= start && currentRow <= end) {
                     String[] parts = line.split(",", 2);
                     if (parts.length == 2) {
-                        int num = Integer.parseInt(parts[0].trim());
-                        String str = parts[1].trim();
-                        list.add(new Pair(num, str));
+                        int number = Integer.parseInt(parts[0].trim());
+                        String word = parts[1].trim();
+                        list.add(new Pair(number, word));
                     }
                 }
                 currentRow++;
             }
         } catch (IOException e) {
-            System.out.println("Error reading CSV: " + e.getMessage());
+            System.out.println("Error reading file: " + e.getMessage());
         }
         return list;
     }
 
-    // Merge Sort 主函数
-    public static void mergeSort(List<Pair> arr, int left, int right, List<String> logs) {
+    // Merge Sort 过程
+    public static void mergeSort(ArrayList<Pair> arr, int left, int right, List<String> logs) {
         if (left < right) {
             int mid = (left + right) / 2;
             mergeSort(arr, left, mid, logs);
@@ -66,15 +70,14 @@ public class merge_sort_step {
         }
     }
 
-    // Merge 两个子数组并记录步骤
-    public static void merge(List<Pair> arr, int left, int mid, int right, List<String> logs) {
+    // 合并两个子数组并记录当前排序状态
+    public static void merge(ArrayList<Pair> arr, int left, int mid, int right, List<String> logs) {
         List<Pair> leftList = new ArrayList<>(arr.subList(left, mid + 1));
         List<Pair> rightList = new ArrayList<>(arr.subList(mid + 1, right + 1));
 
         int i = 0, j = 0, k = left;
-
         while (i < leftList.size() && j < rightList.size()) {
-            if (leftList.get(i).number <= rightList.get(j).number) {
+            if (leftList.get(i).i <= rightList.get(j).i) {
                 arr.set(k++, leftList.get(i++));
             } else {
                 arr.set(k++, rightList.get(j++));
@@ -83,23 +86,28 @@ public class merge_sort_step {
         while (i < leftList.size()) arr.set(k++, leftList.get(i++));
         while (j < rightList.size()) arr.set(k++, rightList.get(j++));
 
-        logs.add(toStringList(arr));
+        logs.add(toStepString(arr));
     }
 
-    // 将当前排序状态转换为字符串
-    public static String toStringList(List<Pair> list) {
-        return list.toString().replaceAll("[\\[\\]]", ""); // 去除方括号
+    // 将当前数组状态转为格式化字符串
+    public static String toStepString(List<Pair> list) {
+        List<String> formatted = new ArrayList<>();
+        for (Pair p : list) {
+            formatted.add(p.toFormatted());
+        }
+        return String.join(", ", formatted);
     }
 
-    // 输出所有步骤到文件
-    public static void writeStepsToFile(List<String> steps, String filename) {
+    // 写入所有排序步骤到文件
+    public static void writeSteps(List<String> steps, String filename) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
             for (String step : steps) {
                 bw.write(step);
                 bw.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error writing steps: " + e.getMessage());
+            System.out.println("Error writing file: " + e.getMessage());
         }
     }
 }
+
