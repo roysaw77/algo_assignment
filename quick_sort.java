@@ -21,12 +21,16 @@ public class quick_sort {
         final String fn = "dataset_sample_1000.csv";
         final String sorted = "quick_sort_1000000.csv";
 
-        ArrayList<Pair> d = readCSV(fn);
 
-        // Step 2: Start timing and sort
+        ArrayList<Pair> data = readCSV(inputFile);
+
         long startTime = System.currentTimeMillis();
-        quickSort(d, 0, d.size() - 1); // Use simplified quick sort
+        quickSort(data, 0, data.size() - 1);
         long endTime = System.currentTimeMillis();
+
+        writeCSV(data, outputFile);
+
+        System.out.println("Time taken: " + (endTime - startTime) + " ms");
 
         // Step 3: Write sorted data
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(sorted))) {
