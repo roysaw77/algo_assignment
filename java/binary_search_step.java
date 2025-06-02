@@ -36,17 +36,18 @@ public class binary_search_step {
             }
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
+            sc.close();
             return;
         }
 
         long[] keys = new long[lines.size()];
         for (int i = 0; i < lines.size(); i++) {
             String[] parts = lines.get(i).split("/");
-            keys[i] = Long.parseLong(parts[0]);  // ✅ Use Long
+            keys[i] = Long.parseLong(parts[0]);
         }
 
-        // Run modified binary search with trace
-        int index = binarySearchWithTrace(keys, lines, target, traceSteps);
+
+        binarySearchWithTrace(keys, lines, target, traceSteps);
 
         // Output trace to file
         String outputFile = "binary_search_step_" + target + ".txt";
@@ -59,6 +60,7 @@ public class binary_search_step {
         } catch (IOException e) {
             System.out.println("Error writing output: " + e.getMessage());
         }
+        sc.close();
     }
 
     public static int binarySearchWithTrace(long[] array, ArrayList<String> fullLines, long target, List<Pair> traceSteps) {

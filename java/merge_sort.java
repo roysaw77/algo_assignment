@@ -19,7 +19,7 @@ public class merge_sort {
 
     public static void main(String[] args) {
         final String inputFile = "dataset_sample_1000.csv"; // 修改为你的数据集
-        final String outputFile = "merge_sort_1000.csv";    // 根据数据集命名
+        final String outputFile = "merge_sort_1000000.csv";    // 根据数据集命名
 
         ArrayList<Pair> data = readCSV(inputFile);
 
