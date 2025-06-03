@@ -99,11 +99,11 @@ int main(int argc, char* argv[]) {
     mergeSort(data, 0, data.size() - 1);
     chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
-    // 改成容易确认的名字
-    saveCSV("sorted_confirm.csv", data);
-
+    
+    saveCSV("merge_sort_1000000.csv", data);
+ 
     chrono::duration<double> elapsed = end - start;
-    cout << "Sorted output written to sorted_confirm.csv" << endl;
+    cout << "Sorted output written to merge_sort_1000000.csv" << endl;
     cout << "Time taken: " << elapsed.count() << "s" << endl;
 
     return 0;

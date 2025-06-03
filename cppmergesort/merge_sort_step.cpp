@@ -42,7 +42,7 @@ void merge(vector<Data>& arr, int l, int m, int r) {
     while (i < len1) arr[k++] = L[i++];
     while (j < len2) arr[k++] = R[j++];
 
-    recordStep(arr); // after merge
+    recordStep(arr); // record after each merge
 }
 
 void mergeSort(vector<Data>& arr, int l, int r) {
@@ -91,19 +91,17 @@ int main(int argc, char* argv[]) {
 
     vector<Data> records = readSelectedRows(inputFile, startRow, endRow);
 
-    recordStep(records); // log the initial state
+    recordStep(records); // initial step
     mergeSort(records, 0, records.size() - 1);
 
-    ofstream out("merge_step_output.txt");
+    string outFile = "merge_sort_step_" + to_string(startRow) + "_" + to_string(endRow) + ".txt";
+    ofstream out(outFile);
     for (int i = 0; i < stepList.size(); i++) {
         out << stepList[i] << endl;
     }
     out.close();
 
-    cout << "Steps written to merge_step_output.txt" << endl;
+    cout << "Steps written to " << outFile << endl;
     return 0;
 }
 
-
-// g++ merge_sort_step.cpp -o merge_sort_step
-// ./merge_sort_step dataset_sample_1000.csv 1 7
